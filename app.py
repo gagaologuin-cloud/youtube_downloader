@@ -40,4 +40,6 @@ def download_video():
     return send_file(filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get('PORT', 5000))
+    print("✅ YouTube Downloader Web App is running!")
+    app.run(host='0.0.0.0', port=port)
