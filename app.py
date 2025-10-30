@@ -1,43 +1,43 @@
+from flask import Flask, render_template, request, send_file
 import os
-from flask import Flask, request, jsonify
-from pytubefix import YouTube
+import yt_dlp
 
 app = Flask(__name__)
 
-DOWNLOAD_PATH = os.path.join(os.path.expanduser("~"), "Downloads")
-
 @app.route('/')
-def home():
-    return "✅ YouTube Downloader Web App is running!"
+def index():
+    return render_template('index.html')
 
 @app.route('/download', methods=['POST'])
 def download_video():
-    data = request.get_json()
-    url = data.get('url')
-    mode = data.get('mode', 'mp4')
+    url = request.form.get('url')
+    format_type = request.form.get('format')
 
     if not url:
-        return jsonify({"status": "error", "message": "Missing YouTube URL"}), 400
+        return "No URL provided", 400
 
-    yt = YouTube(url)
-    title = yt.title.replace("/", "_").replace("\\", "_")
+    ydl_opts = {'outtmpl': '%(title)s.%(ext)s'}
 
-    if mode == "mp3":
-        stream = yt.streams.filter(only_audio=True).first()
-        file_path = os.path.join(DOWNLOAD_PATH, f"{title}.mp3")
-        temp_file = stream.download(output_path=DOWNLOAD_PATH)
-        base, _ = os.path.splitext(temp_file)
-        os.rename(temp_file, file_path)
+    if format_type == 'mp3':
+        ydl_opts.update({
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        })
     else:
-        stream = yt.streams.get_highest_resolution()
-        file_path = os.path.join(DOWNLOAD_PATH, f"{title}.mp4")
-        stream.download(output_path=DOWNLOAD_PATH, filename=os.path.basename(file_path))
+        ydl_opts['format'] = 'bestvideo+bestaudio/best'
 
-    return jsonify({
-        "status": "success",
-        "title": title,
-        "file_path": file_path
-    })
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=True)
+        filename = ydl.prepare_filename(info)
+
+        if format_type == 'mp3':
+            filename = os.path.splitext(filename)[0] + ".mp3"
+
+    return send_file(filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=10000)

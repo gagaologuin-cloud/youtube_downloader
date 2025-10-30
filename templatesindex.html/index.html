@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free YouTube Downloader 2025 — Convert YouTube videos to MP4 or MP3 instantly. Fast, secure, no ads.">
+  <meta name="keywords" content="YouTube downloader, MP4, MP3, free, 2025, video converter">
+  <title>YouTube Downloader 2025 | Free MP4 & MP3 Converter</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎥 YouTube Downloader 2025</h1>
+    <p>Convert YouTube videos to MP4 or MP3 — Free, Fast & Secure</p>
+    <form action="/download" method="POST">
+      <input type="text" name="url" placeholder="Paste YouTube link here..." required>
+      <select name="format">
+        <option value="mp4">MP4 (Video)</option>
+        <option value="mp3">MP3 (Audio)</option>
+      </select>
+      <button type="submit">Download</button>
+    </form>
+  </div>
+</body>
+</html>
