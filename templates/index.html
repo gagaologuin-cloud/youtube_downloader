@@ -1,29 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Fast and free YouTube MP3/MP4 Downloader. Convert and download YouTube videos easily on desktop or mobile.">
-  <meta name="keywords" content="YouTube downloader, YouTube MP3, YouTube MP4, online converter, free video downloader">
-  <meta name="author" content="2KHOOP22">
-  <title>Free YouTube MP3/MP4 Downloader | Fast & Easy</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Downloader</title>
+<style>
+body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; background: #f8f9fa; }
+input, select, button { padding: 10px; margin: 8px; font-size: 16px; }
+button { background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+button:hover { background: #0056b3; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>YouTube MP3/MP4 Downloader</h1>
-    <p>Convert and download YouTube videos in seconds. Works on desktop and mobile.</p>
-    <form method="POST" action="/download">
-      <input type="text" name="url" placeholder="Paste YouTube URL here" required>
-      <div class="buttons">
-        <button type="submit" name="format" value="mp4">Download MP4</button>
-        <button type="submit" name="format" value="mp3">Download MP3</button>
-      </div>
-    </form>
-    <div class="footer">
-      &copy; 2025 2KHOOP22 • Fast & Free Online YouTube Downloader
-    </div>
-  </div>
+<h2>🎬 YouTube Downloader (MP4 / MP3)</h2>
+<input type="text" id="url" placeholder="Paste YouTube URL" size="50">
+<select id="type">
+  <option value="video">MP4 Video</option>
+  <option value="audio">MP3 Audio</option>
+</select>
+<br>
+<button onclick="download()">Download</button>
+
+<p id="status"></p>
+
+<script>
+async function download() {
+  const url = document.getElementById("url").value;
+  const type = document.getElementById("type").value;
+  const status = document.getElementById("status");
+  
+  status.innerText = "⏳ Downloading... please wait";
+
+  const response = await fetch("/download", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url, type })
+  });
+
+  if (!response.ok) {
+    status.innerText = "❌ Failed. Please try again.";
+    return;
+  }
+
+  const blob = await response.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = type === "audio" ? "audio.mp3" : "video.mp4";
+  a.click();
+
+  status.innerText = "✅ Download complete!";
+}
+</script>
 </body>
 </html>
