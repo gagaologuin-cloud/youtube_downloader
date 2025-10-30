@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Fast and free YouTube MP3/MP4 Downloader. Convert and download YouTube videos easily on desktop or mobile.">
+  <meta name="keywords" content="YouTube downloader, YouTube MP3, YouTube MP4, online converter, free video downloader">
+  <meta name="author" content="2KHOOP22">
+  <title>Free YouTube MP3/MP4 Downloader | Fast & Easy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1384/1384060.png">
+</head>
+<body>
+  <div class="container">
+    <h1>YouTube MP3/MP4 Downloader</h1>
+    <p>Convert and download YouTube videos in seconds. Works on desktop and mobile.</p>
+    <form method="POST" action="/download">
+      <input type="text" name="url" placeholder="Paste YouTube URL here" required>
+      <div class="buttons">
+        <button type="submit" name="format" value="mp4">Download MP4</button>
+        <button type="submit" name="format" value="mp3">Download MP3</button>
+      </div>
+    </form>
+    <div class="footer">
+      &copy; 2025 2KHOOP22 • Fast & Free Online YouTube Downloader
+    </div>
+  </div>
+</body>
+</html>
